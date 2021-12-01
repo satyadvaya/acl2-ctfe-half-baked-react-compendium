@@ -1,84 +1,98 @@
-import {useState, useEffect} from 'react';
-import PokemonList from '../../components/PokemonList/PokemonList';
+import { useState, useEffect } from "react";
+import PokemonList from "../../components/PokemonList/PokemonList";
 import {
   fetchFilteredPokemon,
   fetchPokemon,
   fetchSearchPokemon,
-  fetchTypes,
-} from '../../services/pokemon';
-import './Compendium.css';
-import Controls from '../../components/Controls/Controls';
-import pokeball from '../../assets/pokeball.png';
+  // fetchTypes,
+  fetchPokemonTypes,
+} from "../../services/pokemon";
+import "./Compendium.css";
+import Controls from "../../components/Controls/Controls";
+import pokeball from "../../assets/pokeball.png";
 
 export default function Compendium() {
   const [loading, setLoading] = useState(true);
   const [pokemons, setPokemons] = useState([]);
-  const [searchName, setSearchName] = useState('');
+  const [searchName, setSearchName] = useState("");
   const [types, setTypes] = useState([]);
-  const [selectedType, setSelectedType] = useState('all');
+  const [selectedType, setSelectedType] = useState("all");
 
-  //TODO 😖 help!
+  // TODO 😖 help!
   // if (pokemons.count !== 0) {
-  //   useEffect(() => {
-  //     const getPokemon = async () => {
-  //       const pokemonList = await fetchPokemon();
-  //        this.setState({pokemons: pokemonList});
-  //       setLoading(false);
-  //     };
-  //     getPokemon();
-  //   }, [pokemons]);
+  useEffect(() => {
+    // const getPokemon = async () => {
+    async function getPokemon() {
+      const pokemonList = await fetchPokemon();
+      // this.setState({ pokemons: pokemonList });
+      setPokemons(pokemonList);
+      setLoading(false);
+    }
+    getPokemon();
+    // }, [pokemons]);
+  }, []);
   // }
 
   //TODO 😖 help!
-  //   useEffect(async () => {
-  //      function getTypes() {
-  //       const pokemonTypes = fetchTypes();
-  //       setTypes(pokemonTypes);
-  //     }
-  //     getTypes();
-  //   }, []);
+  // useEffect(async () => {
+  useEffect(() => {
+    //  function getTypes() {
+    async function getTypes() {
+      // const pokemonTypes = fetchTypes();
+      const pokemonTypes = await fetchPokemonTypes();
+      // setTypes(pokemonTypes);
+      setPokemonTypes(pokemonTypes);
+    }
+    getTypes();
+  }, []);
 
   //TODO 😖 help!
-  // useEffect(() => {
-  //   async function getFilteredPokemon() {
-  //     if (!selectedType) return;
-  //     setLoading(true);
+  useEffect(() => {
+    // async function getFilteredPokemon() {
+    if (!selectedType) return;
 
-  //     if (selectedType !== 'all') {
-  //       const filteredPokemon = await fetchFilteredPokemon(selectedType);
-  //       setPokemons(filteredPokemon);
-  //     } else {
-  //       const pokemonList = await fetchPokemon();
-  //       this.setState({pokemons: pokemonList});
-  //     }
-  //     setLoading(false);
-  //     setSort('');
-  //   }
+    async function getFilteredPokemon() {
+      setLoading(true);
+      // if (selectedType !== 'all') {
+      if (selectedType === "all") {
+        // const filteredPokemon = await fetchFilteredPokemon(selectedType);
+        const pokemonList = await fetchPokemon();
+        // setPokemons(filteredPokemon);
+        setPokemons(pokemonList);
+      } else {
+        // const pokemonList = await fetchPokemon();
+        const filteredPokemon = await fetchFilteredPokemon(selectedType);
+        // this.setState({pokemons: pokemonList});
+        setPokemons(filteredPokemon);
+      }
+      setLoading(false);
+      // setSort('');
+    }
 
-  //   getFilteredPokemon();
-  // }, [selectedType]);
+    getFilteredPokemon();
+  }, [selectedType]);
 
   const handleSubmit = (event) => {
     event.preventDefault();
     setLoading(true);
     fetchSearchPokemon(searchName)
       .then((searchedPokemons) => {
-        this.setState({pokemons: searchedPokemons});
+        this.setState({ pokemons: searchedPokemons });
       })
       .catch((error) => {})
       .finally(() => {
         setLoading(false);
-        setSearchName('');
-        setSelectedType('');
+        setSearchName("");
+        setSelectedType("");
       });
   };
 
   return (
-    <div className='app'>
+    <div className="app">
       <main>
-        <div className='title'>
-          <img src={pokeball} alt='pokeball' />
-          <h1 className='titleText'>Alchemy Compendium</h1>
+        <div className="title">
+          <img src={pokeball} alt="pokeball" />
+          <h1 className="titleText">Alchemy Compendium</h1>
         </div>
         <Controls
           name={searchName}

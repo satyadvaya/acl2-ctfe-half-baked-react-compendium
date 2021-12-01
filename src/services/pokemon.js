@@ -1,16 +1,16 @@
-import {pokeMunger} from '../utils/helpers';
+import { pokeMunger } from "../utils/helpers";
 
 const favPokemon = [
-  'charizard',
-  'typhlosion',
-  'blaziken',
-  'mewtwo',
-  'suicune',
-  'pidgeot',
-  'golduck',
-  'gardevoir',
-  'ninetales',
-  'houndoom',
+  "charizard",
+  "typhlosion",
+  "blaziken",
+  "mewtwo",
+  "suicune",
+  "pidgeot",
+  "golduck",
+  "gardevoir",
+  "ninetales",
+  "houndoom",
 ];
 
 export const fetchPokemon = async () => {
@@ -43,7 +43,7 @@ export const fetchSearchPokemon = (pokemonName) => {
   )
     .then((data) => data.json())
     .then((pokemonData) => {
-      const {results} = pokemonData;
+      const { results } = pokemonData;
       const pokemonResults = results.map((pokemon) => pokeMunger(pokemon));
       return pokemonResults;
     });
@@ -56,7 +56,7 @@ export const fetchTypes = async () => {
 
   // get random types
   const randomTypes = pokemonTypes
-    .map((pokemonType) => ({type: pokemonType.type}))
+    .map((pokemonType) => ({ type: pokemonType.type }))
     .sort(() => 0.5 - Math.random())
     .slice(0, 5);
   return randomTypes;
