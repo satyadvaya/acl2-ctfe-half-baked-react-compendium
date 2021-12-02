@@ -9,7 +9,7 @@ import {
 import "./Compendium.css";
 import Controls from "../../components/Controls/Controls";
 import pokeball from "../../assets/pokeball.png";
-import { getByPlaceholderText } from "@testing-library/dom";
+// import { getByPlaceholderText } from "@testing-library/dom";
 
 export default function Compendium() {
   const [loading, setLoading] = useState(true);
@@ -19,7 +19,7 @@ export default function Compendium() {
   const [selectedType, setSelectedType] = useState("all");
 
   // TODO 😖 help!
-  // if (pokemons.count === 0) {
+  // if (pokemons.count !== 0) {
   useEffect(() => {
     // const getPokemon = async () => {
     async function getPokemon() {
@@ -62,7 +62,6 @@ export default function Compendium() {
       }
       setLoading(false);
       // setSort('');
-      setSelectedType(selectedType);
     }
 
     getFilteredPokemon();
