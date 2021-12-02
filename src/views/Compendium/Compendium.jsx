@@ -4,12 +4,12 @@ import {
   fetchFilteredPokemon,
   fetchPokemon,
   fetchSearchPokemon,
-  // fetchTypes,
-  fetchPokemonTypes,
+  fetchTypes,
 } from "../../services/pokemon";
 import "./Compendium.css";
 import Controls from "../../components/Controls/Controls";
 import pokeball from "../../assets/pokeball.png";
+import { getByPlaceholderText } from "@testing-library/dom";
 
 export default function Compendium() {
   const [loading, setLoading] = useState(true);
@@ -19,7 +19,7 @@ export default function Compendium() {
   const [selectedType, setSelectedType] = useState("all");
 
   // TODO 😖 help!
-  // if (pokemons.count !== 0) {
+  // if (pokemons.count === 0) {
   useEffect(() => {
     // const getPokemon = async () => {
     async function getPokemon() {
@@ -39,34 +39,30 @@ export default function Compendium() {
     //  function getTypes() {
     async function getTypes() {
       // const pokemonTypes = fetchTypes();
-      const pokemonTypes = await fetchPokemonTypes();
-      // setTypes(pokemonTypes);
-      setPokemonTypes(pokemonTypes);
+      const pokemonTypes = await fetchTypes();
+      setTypes(pokemonTypes);
     }
     getTypes();
   }, []);
 
   //TODO 😖 help!
   useEffect(() => {
-    // async function getFilteredPokemon() {
-    if (!selectedType) return;
-
     async function getFilteredPokemon() {
+      if (!selectedType) return;
+
       setLoading(true);
-      // if (selectedType !== 'all') {
-      if (selectedType === "all") {
-        // const filteredPokemon = await fetchFilteredPokemon(selectedType);
-        const pokemonList = await fetchPokemon();
-        // setPokemons(filteredPokemon);
-        setPokemons(pokemonList);
-      } else {
-        // const pokemonList = await fetchPokemon();
+      if (selectedType !== "all") {
         const filteredPokemon = await fetchFilteredPokemon(selectedType);
-        // this.setState({pokemons: pokemonList});
         setPokemons(filteredPokemon);
+      } else {
+        const pokemonList = await fetchPokemon();
+        selectedType;
+        // this.setState({pokemons: pokemonList});
+        setPokemons(pokemonList);
       }
       setLoading(false);
       // setSort('');
+      setSelectedType(selectedType);
     }
 
     getFilteredPokemon();
@@ -77,7 +73,8 @@ export default function Compendium() {
     setLoading(true);
     fetchSearchPokemon(searchName)
       .then((searchedPokemons) => {
-        this.setState({ pokemons: searchedPokemons });
+        // this.setState({ pokemons: searchedPokemons });
+        setPokemons(searchedPokemons);
       })
       .catch((error) => {})
       .finally(() => {
